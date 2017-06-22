@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="introApp">
+<head>
+    <title>Angular</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+ <div ng-controller="mainCtrl">
+ <div>
+ <input ng-model="search" type="text" placeholder="Recherche">
+ </div>
+ 
+
+<ul>
+    
+        </li>
+
+
+        <div>
+            <button>
+            <ng-click="nb_clicks = nb_clicks + 1">
+                Click
+            </button>{{nb_clicks}}
+
+        </div>
+       <table class="table table-striped">
+     
+            <th ng-click="changeOrder('nom')">Nom</th>
+            <th>Prénom</th>
+            <th>Age</th>
+            <th>Numéro</th>
+   
+            <th>Actions</th>
+
+
+       </tr>
+       
+
+       <tr ng-repeat="g in filterGiocatori=giocatori | filter:search">
+            <td>{{g.nom}}</td>
+            <td>{{g.prenom}}</td>
+            <td>{{g.age}}</td>
+            <td>{{g.num_maillot}}</td>
+           
+
+       </tr>
+
+       </table>
+</ul>
+
+
+ </div>
+
+
+<script src="js/angular.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

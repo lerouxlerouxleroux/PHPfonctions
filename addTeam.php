@@ -1,28 +1,37 @@
 <?php
+
 include 'includes/util.inc.php'; //bibliothèque d'outils
 include 'includes/equipe.inc.php';
 include 'includes/header.php';
 include 'includes/menu.php'; 
 
-if (isset($_POST['input'])) //si formulaire est posté
-    {   
 
+// note concernant upload
+//pour prendre en compte des fichiers > 2M
+// Modifier le fichier php.ini: c:\wamp64\bin\php\<php_version>
+//upload_max_filesize = 2M
+
+// EXO FORMATS AUTORISEs
+
+if (isset($_POST['input']) && isset($_FILES)) //si formulaire est posté et que le client ait parcouru et choisi le fichier
+   
+{ 
+         $extension = substr($_FILES['logo']['name'], -4);//fonction , range photo sur le serveur avec le nom de l'équipe, exemple 77.jpg    
+         $conditions = 
+         $_FILES['logo']['size'] < 500000 &&
+         isFormatAllowed($extension);  //expression booléenne
     
-    //var_dump($team);
-   
-    //var_dump($_POST);
-   
-
 
      // upload du fichier
- if ($_FILES['logo']['size'] < 500000) {
+  if ($conditions)
+   
+   {
  
 
-    //déplacer le fichier de la zone temporaire vers son emplacement "difinitif" sur le serveur
-    $extention = substr($_FILES['logo']['name'], -4);//fonction , range photo sur le serveur avec le nom de l'équipe, exemple 77.jpg au lieu de logo.jpg, ce qui est différente de ranger juste le logo sur le serveur avec le nom initial
+    //déplacer le fichier de la zone temporaire vers son emplacement "difinitif" sur le serveurlieu de logo.jpg, ce qui est différente de ranger juste le logo sur le serveur avec le nom initial
     $src = $_FILES['logo']['tmp_name'];
     //$dest = 'img/' . $_FILES['logo']['name'];
-    $dest = 'img/' . $_POST['nom'] . $extention;
+    $dest = 'img/' . rightFormat($_POST['nom']) . $extention;
     move_uploaded_file($src, $dest);// cle tmp_name dans var_dump
     $team = $_POST; // copie de $_POST dans $team;
     $team['logo'] = $dest;// on ajoute la clé logo au tableau associatif $team
@@ -36,7 +45,7 @@ if (isset($_POST['input'])) //si formulaire est posté
         echo '<p class="text-warning">L\'enregistrement a échoué</p>';
    }
  } else {
-    echo '<p>Fichier trop lourd</p>';
+    echo '<p>Format non autorisé ou fichier trop lourd</p>';
  }
 
  }
@@ -47,40 +56,25 @@ if (isset($_POST['input'])) //si formulaire est posté
 
  ?>
 
+ <?php
 
-<h1>Enregistrer une équipe</h1>
-<div class="container">
-<!--enctype="multipart/form-data"> permet d'envoyer des fichiers-->
-    <form method="POST" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-md-4">
-        <label>Equipe</label>
-        <input type="text" name="nom">
-       </div>
-    <div class="col-md-4">     
-        <label>Entraîneur</label>
-        <input type="text" name="entraineur">
-    </div>
-        
-    <div class="col-md-4">
-        <label>Couleurs</label>
-        <input type="text" name="couleurs">
-    </div>
-</div> 
+//if (isset($_SESSION['logged'])) {
+    if (isset($_SESSION['user'])) {
+        if ($_SESSION['user']['role'] == 'admin') {
+            include 'includes/forms/addTeam.inc.php'; //on envoie à l'utilisateur le formulaire
+    } else {
+        echop ('Droits insuffisants');
+    }
+    }
 
-<div class="col-md-4">
-        <label>Logo</label>
-        <input type="file" name="logo">
-    </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <input type="submit" name="input" value="Enregistrer">
-    </div>
-</div>
-</form>
-</div>
-        
+ else  
+    {
+    
+     echop('Vous devez être connecté pour acceder à cette ressource');
+    }
+
+ ?>        
 
  <?php
  include 'includes/footer.php';

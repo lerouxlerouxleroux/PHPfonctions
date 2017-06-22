@@ -5,7 +5,7 @@ include_once 'connexion_db.php';
 
 function getTeams() {
     $db = connect();
-    $query = $db->prepare('SELECT * FROM equipe');
+    $query = $db->prepare('SELECT * FROM equipe ORDER BY nom ASC');
     $query->execute(); //binder en valeur
     return $query->fetchAll();
 
@@ -28,8 +28,10 @@ function getLogo() {
 
 //option de formatage, prend des données brut et les formatent
 function selectFormat($teams) {
-    $output = '<select name="equipe">'; //absolument donner un name, sans qou il ne part pas au serveur
-
+    //ng-model permet à angular de surveiller
+    //la valeur selectionné dans le menu de sélection
+    $output = '<select ng-model="player.equipe" name="equipe">'; //absolument donner un name, sans qou il ne part pas au serveur// ng-model doit être écouté
+    $output .= '<option value="0">Sans équipe</option>';
     foreach ($teams as $team) {
         $output .= '<option value="'.$team['id'].'">'.$team['nom'].'</option>'; /// au serveur on va envoyer l'identifiant de l'équipe
     }
@@ -64,7 +66,7 @@ function selectFormat($teams) {
 
 function selectFormatWithOpt($teams, $opt) {
     $output = '<select name="equipe">'; //absolument donner un name, sans qou il ne part pas au serveur
-
+     $output .= '<option value="0">Sans équipe</option>';
     foreach ($teams as $team) {
         if ($team['id'] == $opt) {
             $output .= '<option selected value="'.$team['id'].'">'.$team['nom'].'</option>'; /// au serveur on va envoyer l'identifiant de l'équipe

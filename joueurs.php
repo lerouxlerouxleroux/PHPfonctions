@@ -1,4 +1,7 @@
 <?php
+include 'poo/classes/PlayerManager.class.php';
+
+
 include 'includes/util.inc.php'; //bibliothèque d'outils
 include 'includes/equipe.inc.php';
 include 'includes/header.php';
@@ -15,7 +18,7 @@ if (isset($_GET['ageLimit'])) {
 // connexion à la base de données
 
 // bibliothèque utilisé pour dialoguer avec MySql : PDO
-$db = new PDO('mysql:host=localhost;dbname=formation-poec', 'root', '');  //l'argument; nom d'utilisateur , copie de PDO, objet est résultant d'une copie, créee un appel ' la'objet, quand on utilise une fonction à partir d'un objet on parle d'une méthode, plus bas prepare
+/*$db = new PDO('mysql:host=localhost;dbname=formation-poec', 'root', '');  //l'argument; nom d'utilisateur , copie de PDO, objet est résultant d'une copie, créee un appel ' la'objet, quand on utilise une fonction à partir d'un objet on parle d'une méthode, plus bas prepare
 
 
 //préparation de la requête (lecture), $query pour récupérer le retour
@@ -30,7 +33,7 @@ if (isset($ageLimit)) {
 //exécution
  
 //$joueurs = $query->execute();
-$query->execute(); // execute renvoie une valeur booléenne
+$query->execute(); // execute renvoie une valeur booléenne */
 
 
 
@@ -40,9 +43,17 @@ $query->execute(); // execute renvoie une valeur booléenne
 
 //var_dump($data);
 
+$pm = new PlayerManager();
 
+if (isset($ageLimit)) {
+  $query = $pm->getListFilteredByAge($ageLimit);
+} else {
 
+ $query = $pm->getList();  //renvoie la liste entière
 
+}
+
+$query2 = $pm->getList();
 ?>
 
 <h1>Joueurs</h1>

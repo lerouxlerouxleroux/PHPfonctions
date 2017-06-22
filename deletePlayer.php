@@ -16,8 +16,19 @@ if (isset($_GET['id'])) {
         ':id' => $id
     ));
 
- // rédirection vers liste joueurs
+if (isset($_GET['ajax'])) { //vérification de présence d'ajax , fichier angular
+    //requete issue en http ajax
+    echo "Le joueur d'id ". $id. "a été supprimé";
+
+} else {
+
+//requete issue en http "normal"
+     // rédirection vers liste joueurs
    header('location:joueurs.php');
+
+}
+
+
 }
 
 
